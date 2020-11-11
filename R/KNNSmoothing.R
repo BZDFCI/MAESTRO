@@ -28,6 +28,23 @@
 #'     make the cells/barcodes incomparable, so 'FALSE' is recommended
 #'     in this case. Default: TRUE
 #' @return A smoothed numeric matrix.
+#' @examples
+#' RNA <- scrna$RNA # here scrna is the master object holding scRNA results in MAESTRO
+#' GEmatrix.raw <- GetAssayData(RNA, assay="RNA", slot="counts")
+#' GEmatrix.smoothed <- knn_smoothing( GEmatrix.raw, RNA@graphs$RNA_snn, k = 10, method = "ave", strict = TRUE )
+#' RNA[["RNAsmoothed"]] <- CreateAssayObject(counts=GEmatrix.smoothed)
+#' RNA <- NormalizeData(RNA, assay="RNAsmoothed")
+#' RNA <- ScaleData(RNA, assay="RNAsmoothed")
+#' scrna$RNA <- RNA
+#'
+#' ATAC <- scatac$ATAC
+#' RPmatrix.raw <- GetAssayData(ATAC, assay="ACTIVITY", slot="counts")
+#' RPmatrix.smoothed <- knn_smoothing( RPmatrix.raw, ATAC@graphs$ATAC_snn, k=10, method="ave", strict=TRUE )
+#' ATAC[["ACTIVITYsmoothed"]] <- CreateAssayObject(counts = RPmatrix.smoothed)
+#' ATAC <- NormalizeData(ATAC, assay="ACTIVITYsmoothed")
+#' ATAC <- ScaleData(ATAC, assay="ACTIVITYsmoothed")
+#' scatac$ATAC <- ATAC
+#' 
 #' @export
 
 knn_smoothing <- function(M, SNN, k = 10, method = "ave", strict = TRUE) {
